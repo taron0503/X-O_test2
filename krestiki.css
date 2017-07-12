@@ -1,0 +1,23 @@
+td{ 
+    border:1px solid white;
+	width:50px;
+	height:50px;
+	font-size:40px;
+	color:blue;
+	text-align:center;
+	background-color:silver;
+	}
+table{
+	background-color:blue;
+	position:absolute;
+	top:160px;
+	left:500px
+
+}
+button{
+	background:blue;
+	padding: 10px;
+	color:white;
+	font-size:30px;
+	border-radius:5px;
+}
