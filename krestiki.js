@@ -155,7 +155,7 @@ function Board(size){
 					count++
 					temp3+=this.size-1;
 				}else{
-					temp3+=this.size+1;
+					temp3+=this.size-1;
 					count =0;
 				}
 				if(count == this.victoryCount){
@@ -174,7 +174,7 @@ function Board(size){
 					count++;
 					temp4+=this.size-1;
 				}else{
-					temp4+=this.size+1;
+					temp4+=this.size-1;
 					count = 0;
 				}
 				if(count == this.victoryCount){
