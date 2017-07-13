@@ -3,7 +3,7 @@ $(document).ready(function(){
 function Board(size){
 	self = this;
 	this.size = size;
-	this.victoryCount = 3;
+	this.victoryCount = this.size;
 
 	this.player1 = {
 		Name:'User',
@@ -26,7 +26,7 @@ function Board(size){
 			})
 			var item = arr[Math.floor(Math.random()*arr.length)];	
 			$('#'+item).html('<span style = "color:'+this.Color+'">'+this.Sign+'</span>');
-			if(self.CheckVictory(this,item)){
+			if(self.CheckVictory(this)){
 				$('td').off();					
 			}
 		}
@@ -63,129 +63,90 @@ function Board(size){
 	}
 
 
-	this.CheckVictory = function(player,id){
+	this.CheckVictory = function(player){
 		var count = 0;
 
 		//horizontal check
-		$('tr').each(function(){
-			count = 0;
-			$(this).find('td').each(function(){
-				if($(this).text() == player.Sign){
-					count++
+
+		var tr = $('tr');
+		for(var i = 0; i < tr.length; i++){
+			var td = tr.eq(i).find('td');
+			for(var j = 0; j < td.length;j++){
+				if(td.eq(j).text() == player.Sign){
+					count++;
 				}else{
-					count = 0
+					count =0;
+					break;
 				}
-				if(count == self.victoryCount)
+				if(count == this.victoryCount){
 					alert(player.Name + " Won");
 					return true;
-			})
-		})
+				}
+			}
+		}
 
 
 		//vertival check
 
+
+
 		for(var i = 0; i < this.size; i++){
 			count = 0;
-			$('tr td:nth-child('+i+')').each(function(){
-				console.log(this)
-				if($(this).text() == player.Sign){
+			var td = $('tr td:nth-child('+i+')');
+			for(var j = 0; j < this.size; j++){
+				if(td.eq(j).text() == player.Sign){
 					count++
 				}else{
 					count = 0
 				}
-				if(count == self.victoryCount)
+				if(count == self.victoryCount){
 					alert(player.Name + " Won");
 					return true;
-			})
+				}
+					
+			}
+		}
+			
+		
+
+		// //diagonal check
+
+		var id = 0;
+		while(id <= Math.pow(this.size,2)){
+			
+			if($('#'+id).text() == player.Sign){
+				count++;
+				id += this.size + 1;
+			}else{
+				console.log(count);
+				count = 0;
+				break;
+			}
+			if(count == this.victoryCount){
+				alert(player.Name + " Won");
+				return true;
+			}
 		}
 
-		//diagonal check
 
-		var temp1 = 0;
-		var temp2 = this.size;
-		for(var i = this.size; i > 0; i--){
-			count = 0;
-
-			for(var j = 0; j < i; j++){
-				// console.log(($('#'+(temp1))));
-
-				if($('#'+(temp1)).text() == player.Sign){
-					count++
-					temp1+=this.size+1;
-				}else{
-					temp1+=this.size+1;
-					count =0;
-				}
-				if(count == this.victoryCount){
-					alert(player.Name + " Won");
-					return true;
-				}
-				
+		id = this.size - 1;
+		while(id <= this.size * (this.size - 1)){
+			
+			if($('#'+id).text() == player.Sign){
+				count++;
+				id += this.size - 1;
+			}else{
+				console.log(count);
+				count = 0;
+				break;
 			}
-			temp1 = this.size-i+1;
-
-
-			temp2 = this.size * (this.size - i +1) ;
-			for(var k = this.size; k < this.size * i; k+= this.size){
-				if($('#'+(temp2)).text() == player.Sign){
-					count++;
-					temp2+=this.size+1;
-				}else{
-					temp2+=this.size+1;
-					count = 0;
-				}
-				if(count == this.victoryCount){
-					alert(player.Name + " Won");
-					return true;
-				}
+			if(count == this.victoryCount){
+				alert(player.Name + " Won");
+				return true;
 			}
-
-
 		}
 
-		var temp3 = this.size-1;
-		var temp4;
-		for(var i = this.size; i > 0; i--){
-			count = 0;
-
-			for(var j = this.size-1; j > 0; j--){
-				// console.log(($('#'+(temp3))));
-
-				if($('#'+(temp3)).text() == player.Sign){
-					count++
-					temp3+=this.size-1;
-				}else{
-					temp3+=this.size-1;
-					count =0;
-				}
-				if(count == this.victoryCount){
-					alert(player.Name + " Won");
-					return true;
-				}
-				
-			}
-			temp3 = i -2;
-
-
-			temp4 = (this.size - i + 2) * this.size - 1; 
-			for(var k = this.size; k < this.size * i; k+= this.size){
-
-				if($('#'+(temp4)).text() == player.Sign){
-					count++;
-					temp4+=this.size-1;
-				}else{
-					temp4+=this.size-1;
-					count = 0;
-				}
-				if(count == this.victoryCount){
-					alert(player.Name + " Won");
-					return true;
-				}
-			}
-
-
-		}
-
+		//CheckDraw
 		
 		if(this.CheckDraw()){
 			alert('Draw');
@@ -206,7 +167,7 @@ function Board(size){
 
 	this.SelectPlayer = function(){
 		if(confirm("First move make computer") == true){;
-		alert(this.player2.Name + "Computer start!")
+		alert(this.player2.Name + " start!")
 		this.player2.Play();
 		}else{
 			alert(this.player1.Name + " start!")
@@ -220,7 +181,7 @@ function Board(size){
 
 $('#start').on("click", function(){
 	$('#game').empty();
-	var count = $('#Count').val();
+	var count = Number($('#Count').val());
 	var game = new Board(count);
 	game.Init();
 })
